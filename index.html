@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="jv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRANATACARA MASTER - Bahasa Jawa Kelas XII Fase F</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Plus Jakarta Sans & Noto Serif -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Tailwind Custom Colors Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            jawa: {
+              cream: '#FAF7F2',
+              primary: '#2C4A3E',
+              dark: '#1E332B',
+              accent: '#D4A373',
+              gold: '#C59B27',
+              soft: '#FAEDCD',
+              card: '#FFFFFF'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Noto Serif"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAF7F2;
+      color: #2D2A26;
+    }
+    
+    .font-jawa {
+      font-family: 'Noto Serif', serif;
+    }
+
+    /* Motif Batik Parang Halus Background Pattern */
+    .batik-bg {
+      background-color: #FAF7F2;
+      background-image: 
+        radial-gradient(#D4A373 0.75px, transparent 0.75px),
+        radial-gradient(#D4A373 0.75px, #FAF7F2 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      opacity: 0.95;
+    }
+
+    /* Screen visibility control */
+    .app-screen {
+      display: none;
+      animation: fadeIn 0.4s ease-in-out forwards;
+    }
+
+    .app-screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF7F2;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4A373;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #2C4A3E;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+    }
+  </style>
+</head>
+<body class="batik-bg min-h-screen flex flex-col justify-between text-gray-800 antialiased selection:bg-[#D4A373] selection:text-white">
+
+  <!-- NAVBAR -->
+  <header id="main-navbar" class="hidden sticky top-0 z-50 bg-[#2C4A3E] text-white shadow-lg border-b-2 border-[#D4A373]">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+      <!-- Logo & Title -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+        <div class="w-10 h-10 bg-[#D4A373] rounded-full flex items-center justify-center text-[#2C4A3E] font-bold text-xl shadow-md">
+          <i class="fas fa-microphone-alt"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-base sm:text-lg tracking-wide leading-tight text-amber-100">PRANATACARA MASTER</h1>
+          <p class="text-[10px] sm:text-xs text-[#D4A373] tracking-widest font-semibold uppercase">Bahasa Jawa Kelas XII</p>
+        </div>
+      </div>
+
+      <!-- Quick Controls & Score -->
+      <div class="flex items-center space-x-2 sm:space-x-4">
+        <!-- Live Score Display -->
+        <div class="bg-[#1E332B] px-3 py-1.5 rounded-xl border border-[#D4A373]/40 text-xs sm:text-sm flex items-center space-x-2 shadow-inner">
+          <i class="fas fa-trophy text-amber-400"></i>
+          <span class="font-medium text-gray-200">Skor:</span>
+          <strong id="nav-total-score" class="text-amber-300 font-extrabold text-sm sm:text-base">0</strong>
+        </div>
+
+        <!-- Help Modal Button -->
+        <button onclick="openModal('modal-petunjuk')" title="Petunjuk Aplikasis" class="w-9 h-9 rounded-lg bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-gray-200 transition flex items-center justify-center border border-[#D4A373]/30">
+          <i class="fas fa-question-circle text-base"></i>
+        </button>
+
+        <!-- Learning Objectives Modal Button -->
+        <button onclick="openModal('modal-tujuan')" title="Tujuan Pembelajaran" class="w-9 h-9 rounded-lg bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-gray-200 transition flex items-center justify-center border border-[#D4A373]/30">
+          <i class="fas fa-bullseye text-base"></i>
+        </button>
+
+        <!-- Reset Button -->
+        <button onclick="confirmResetData()" title="Reset Progress" class="w-9 h-9 rounded-lg bg-red-900/60 hover:bg-red-700 text-red-200 transition flex items-center justify-center border border-red-500/30">
+          <i class="fas fa-rotate-left text-base"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 sm:py-8">
+
+    <!-- 0. COVER SCREEN -->
+    <section id="screen-cover" class="app-screen active">
+      <div class="max-w-2xl mx-auto glass-card rounded-3xl p-8 sm:p-12 shadow-2xl border border-[#D4A373]/40 text-center relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#D4A373]/20 rounded-full blur-2xl"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-[#2C4A3E]/20 rounded-full blur-2xl"></div>
+
+        <div class="w-24 h-24 bg-[#2C4A3E] rounded-2xl flex items-center justify-center mx-auto mb-6 text-[#D4A373] text-4xl shadow-xl transform border-2 border-[#D4A373]">
+          <i class="fas fa-crown"></i>
+        </div>
+
+        <span class="inline-block bg-[#FAEDCD] text-[#2C4A3E] text-xs font-extrabold px-4 py-1.5 rounded-full border border-[#D4A373] uppercase tracking-widest mb-3">
+          Media Pembelajaran Interaktif SMA/SMK
+        </span>
+
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-[#2C4A3E] mb-3 leading-tight font-jawa">
+          PRANATACARA MASTER
+        </h1>
+        <p class="text-gray-600 font-medium text-base sm:text-lg mb-8 italic">
+          “Olah Swara, Basa, lan Patrap minangka Juru Acara ingkang Trampil lan Berkarakter”
+        </p>
+
+        <div class="bg-[#FAF7F2] p-4 rounded-xl border border-amber-200 mb-8 text-xs sm:text-sm text-gray-700 space-y-1">
+          <p class="font-bold text-[#2C4A3E]"><i class="fas fa-graduation-cap mr-1"></i> Bahasa Jawa Kelas XII - Fase F</p>
+          <p>Capaian Pembelajaran: Peserta didik mampu menganalisis, menyusun, dan menyajikan teks pranatacara secara lisan dan tertulis.</p>
+        </div>
+
+        <button onclick="startAppFlow()" class="w-full sm:w-auto bg-[#2C4A3E] hover:bg-[#1E332B] text-amber-100 font-bold py-4 px-10 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-0.5 border border-[#D4A373] flex items-center justify-center mx-auto text-lg space-x-3">
+          <span>MULAI SINAU</span>
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- 1. REGISTRATION SCREEN -->
+    <section id="screen-register" class="app-screen">
+      <div class="max-w-md mx-auto glass-card rounded-3xl p-6 sm:p-8 shadow-2xl border border-[#D4A373]/50">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 bg-[#FAEDCD] text-[#2C4A3E] rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl border border-[#D4A373]">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-[#2C4A3E] font-jawa">REGISTRASI SISWA</h2>
+          <p class="text-xs text-gray-500 mt-1">Isi data dhiri kanthi lengkap sadurunge miwiti pembelajaran</p>
+        </div>
+
+        <form onsubmit="handleRegistration(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Nama Jangkep</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-user"></i></span>
+              <input type="text" id="reg-nama" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#2C4A3E] focus:border-transparent outline-none text-sm transition" placeholder="Tuladha: Anindya Putri">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Kelas</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-school"></i></span>
+              <input type="text" id="reg-kelas" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#2C4A3E] focus:border-transparent outline-none text-sm transition" placeholder="Tuladha: XII MIPA 1 / XII IPA 2">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Nomor Presensi</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"><i class="fas fa-list-ol"></i></span>
+              <input type="number" id="reg-presensi" min="1" max="60" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#2C4A3E] focus:border-transparent outline-none text-sm transition" placeholder="Tuladha: 08">
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-[#2C4A3E] hover:bg-[#1E332B] text-amber-100 font-bold py-3.5 px-6 rounded-xl shadow-lg transition flex items-center justify-center space-x-2 text-sm mt-2">
+            <span>MLEBU MENYANG DASHBOARD</span>
+            <i class="fas fa-sign-in-alt"></i>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. DASHBOARD SCREEN -->
+    <section id="screen-dashboard" class="app-screen">
+      <!-- Student Banner -->
+      <div class="glass-card p-6 rounded-3xl shadow-xl border-l-8 border-[#2C4A3E] border border-[#D4A373]/30 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <span class="text-xs font-extrabold uppercase tracking-widest text-[#D4A373]">Sugeng Rawuh,</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-[#2C4A3E] font-jawa" id="dash-user-name">Siswa Master</h2>
+          <p class="text-xs sm:text-sm text-gray-600 mt-1">
+            Kelas: <strong id="dash-user-kelas" class="text-gray-800">-</strong> | No. Presensi: <strong id="dash-user-presensi" class="text-gray-800">-</strong>
+          </p>
+        </div>
+
+        <div class="w-full md:w-72 bg-[#FAF7F2] p-4 rounded-2xl border border-amber-200">
+          <div class="flex justify-between items-center text-xs font-bold text-[#2C4A3E] mb-1.5">
+            <span>Progress Pembelajaran</span>
+            <span id="dash-progress-percent">0%</span>
+          </div>
+          <div class="w-full bg-gray-200 h-3 rounded-full overflow-hidden p-0.5 border border-amber-300">
+            <div id="dash-progress-bar" class="bg-[#2C4A3E] h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+          <p class="text-[10px] text-gray-500 mt-1.5 text-right"><span id="dash-completed-count">0</span> saka 6 Level Paripurna</p>
+        </div>
+      </div>
+
+      <!-- Level Cards Grid -->
+      <h3 class="text-xl font-bold text-[#2C4A3E] mb-4 font-jawa flex items-center gap-2">
+        <i class="fas fa-map-signs text-[#D4A373]"></i> Pilihan Level Pembelajaran
+      </h3>
+      <div id="level-cards-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Dynamically rendered via JS -->
+      </div>
+    </section>
+
+    <!-- LEVEL 1: KENAL PRANATACARA -->
+    <section id="screen-level-1" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header -->
+        <div class="flex items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373]">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 1</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Kenal Pranatacara</h2>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </button>
+        </div>
+
+        <!-- Material Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl shadow-md border border-amber-200 space-y-2">
+            <div class="w-10 h-10 bg-[#FAEDCD] text-[#2C4A3E] rounded-xl flex items-center justify-center font-bold text-lg"><i class="fas fa-book-open"></i></div>
+            <h3 class="font-bold text-[#2C4A3E]">Pangerten Pranatacara</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">Pranatacara (MC / Master of Ceremony / Pambiwara) yaiku nimpuna utawa wong sing nduweni tugas nglantarake lan ngatur lumakuning sawijining adicara supaya bisa lumaku kanthi rancag, tertib, lan tertata.</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-md border border-amber-200 space-y-2">
+            <div class="w-10 h-10 bg-[#FAEDCD] text-[#2C4A3E] rounded-xl flex items-center justify-center font-bold text-lg"><i class="fas fa-tasks"></i></div>
+            <h3 class="font-bold text-[#2C4A3E]">Ayahan & Tugas</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">Tugas utamane yaiku mbuka adicara, maosake runtutan rantaman adicara, ngatur tatanan pembicara/pengisi acara, njaga suasana adicara, lan nuntun adicara nganti pungkasan (panutup).</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl shadow-md border border-amber-200 space-y-2">
+            <div class="w-10 h-10 bg-[#FAEDCD] text-[#2C4A3E] rounded-xl flex items-center justify-center font-bold text-lg"><i class="fas fa-user-check"></i></div>
+            <h3 class="font-bold text-[#2C4A3E]">Syarat Utama</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">Kudu nguasani basa Jawa kang trep (unggah-ungguh basa), nduweni olah swara kang arum/gandheng, patrap lan busana kang sopan, sarta tanggap marang kahanan adicara (fleksibel).</p>
+          </div>
+        </div>
+
+        <!-- Level 1 Quiz Container -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200">
+          <div class="flex justify-between items-center mb-4 border-b pb-3">
+            <h3 class="font-bold text-lg text-[#2C4A3E]"><i class="fas fa-pen-nib mr-2 text-[#D4A373]"></i>Kuis Pemahaman (5 Soal)</h3>
+            <span id="l1-quiz-progress" class="text-xs font-extrabold text-[#2C4A3E] bg-[#FAEDCD] px-3 py-1 rounded-full">Soal 1 / 5</span>
+          </div>
+
+          <div id="l1-question-box" class="space-y-4">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 2: BEDAH TEKS -->
+    <section id="screen-level-2" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header -->
+        <div class="flex items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373]">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 2</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Bedah Teks Pranatacara</h2>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </button>
+        </div>
+
+        <!-- Structure Accordion/Cards -->
+        <div class="bg-white p-5 rounded-2xl shadow-md border border-amber-200">
+          <h3 class="font-bold text-[#2C4A3E] mb-3 text-sm uppercase tracking-wider"><i class="fas fa-sitemap text-[#D4A373] mr-2"></i>8 Struktur Teks Pranatacara</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">1. Salam Pambuka</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">2. Atur Pakurmatan</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">3. Atur Pamuji</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">4. Ancasing Gati</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">5. Rantaman Adicara</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">6. Nglantarake Adicara</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">7. Panutup & Nyuwun Ngapura</div>
+            <div class="bg-[#FAF7F2] p-2.5 rounded-xl border border-amber-200 font-medium">8. Salam Panutup</div>
+          </div>
+        </div>
+
+        <!-- Game Identifikasi Teks -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200 space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-base text-[#2C4A3E]"><i class="fas fa-search-plus text-[#D4A373] mr-2"></i>Game Identifikasi Kutipan Teks (8 Soal)</h3>
+            <span id="l2-game-progress" class="text-xs font-bold bg-[#FAEDCD] text-[#2C4A3E] px-3 py-1 rounded-full">Soal 1 / 8</span>
+          </div>
+
+          <div id="l2-quote-card" class="bg-[#FAF7F2] p-5 rounded-xl border-l-4 border-[#2C4A3E] italic text-sm text-gray-800 font-serif">
+            <!-- Rendered via JS -->
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-600 mb-2 uppercase">Pilih Struktur Kang Trep:</label>
+            <div id="l2-options-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 3: SUSUN RANTAMAN -->
+    <section id="screen-level-3" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header -->
+        <div class="flex items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373]">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 3</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Susun Rantaman Adicara</h2>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </button>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200 space-y-4">
+          <div class="bg-[#FAEDCD] p-4 rounded-xl border border-amber-300 text-xs text-[#2C4A3E]">
+            <i class="fas fa-info-circle mr-1 text-base"></i> <strong>Instruksi:</strong> Urutna rantaman adicara <em>"Perpisahan Siswa Kelas XII"</em> ing ngisor iki supaya dadi susunan kang runtut lan bener! Gunakake tombol munggah/mudhun kanggo ngatur urutan.
+          </div>
+
+          <div id="l3-ordering-list" class="space-y-2">
+            <!-- Rendered via JS -->
+          </div>
+
+          <button onclick="checkLevel3Ordering()" class="w-full bg-[#2C4A3E] hover:bg-[#1E332B] text-amber-100 font-bold py-3 px-6 rounded-xl shadow-md transition flex items-center justify-center space-x-2 text-sm">
+            <i class="fas fa-check-circle"></i>
+            <span>PRIKSA URUTAN RANTAMAN</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 4: OLAH SWARA LAN PATRAP -->
+    <section id="screen-level-4" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header -->
+        <div class="flex items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373]">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 4</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Olah Swara lan Patrap</h2>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </button>
+        </div>
+
+        <!-- Module Tabs -->
+        <div class="flex flex-wrap gap-2 border-b border-gray-300 pb-2">
+          <button onclick="switchL4Tab('swara')" id="tab-btn-swara" class="l4-tab-btn active bg-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold">1. Olah Swara</button>
+          <button onclick="switchL4Tab('basa')" id="tab-btn-basa" class="l4-tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold">2. Olah Basa</button>
+          <button onclick="switchL4Tab('patrap')" id="tab-btn-patrap" class="l4-tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold">3. Patrap & Solah Bawa</button>
+          <button onclick="switchL4Tab('salira')" id="tab-btn-salira" class="l4-tab-btn bg-gray-200 text-gray-700 px-4 py-2 rounded-xl text-xs font-bold">4. Ngadi Salira</button>
+        </div>
+
+        <!-- Tab Contents -->
+        <div id="l4-tab-content" class="bg-white p-6 rounded-2xl shadow-md border border-amber-200 text-sm leading-relaxed space-y-3">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- Game Detektif Swara lan Basa -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200 space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-base text-[#2C4A3E]"><i class="fas fa-user-secret text-[#D4A373] mr-2"></i>Game Detektif Swara lan Basa</h3>
+            <span id="l4-game-progress" class="text-xs font-bold bg-[#FAEDCD] text-[#2C4A3E] px-3 py-1 rounded-full">Kasus 1 / 5</span>
+          </div>
+
+          <div id="l4-case-box" class="space-y-4">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 5: SIMULASI ACARA -->
+    <section id="screen-level-5" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header -->
+        <div class="flex items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373]">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 5</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Simulasi lan Studi Kasus</h2>
+          </div>
+          <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+            <i class="fas fa-arrow-left"></i> Dashboard
+          </button>
+        </div>
+
+        <!-- Mission Picker -->
+        <div class="bg-white p-5 rounded-2xl shadow-md border border-amber-200 space-y-3">
+          <h3 class="font-bold text-[#2C4A3E] text-sm"><i class="fas fa-bullhorn text-[#D4A373] mr-2"></i>Pilih Misi Adicara:</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button onclick="selectL5Mission(0)" class="l5-mission-btn bg-[#FAEDCD] border-2 border-[#2C4A3E] p-3 rounded-xl text-xs font-bold text-[#2C4A3E] text-center">
+              Pelepasan Kelas XII
+            </button>
+            <button onclick="selectL5Mission(1)" class="l5-mission-btn bg-gray-100 border border-gray-300 p-3 rounded-xl text-xs font-bold text-gray-600 text-center">
+              Pentas Seni Sekolah
+            </button>
+            <button onclick="selectL5Mission(2)" class="l5-mission-btn bg-gray-100 border border-gray-300 p-3 rounded-xl text-xs font-bold text-gray-600 text-center">
+              Dies Natalis SMA
+            </button>
+            <button onclick="selectL5Mission(3)" class="l5-mission-btn bg-gray-100 border border-gray-300 p-3 rounded-xl text-xs font-bold text-gray-600 text-center">
+              Seminar Basa Jawa
+            </button>
+          </div>
+        </div>
+
+        <!-- Situational Decision Making (10 Cases) -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200 space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-base text-[#2C4A3E]"><i class="fas fa-clipboard-question text-[#D4A373] mr-2"></i>Studi Kasus Pranatacara (10 Situasi)</h3>
+            <span id="l5-case-progress" class="text-xs font-bold bg-[#FAEDCD] text-[#2C4A3E] px-3 py-1 rounded-full">Situasi 1 / 10</span>
+          </div>
+
+          <div id="l5-scenario-box" class="space-y-4">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEVEL 6: FINAL CHALLENGE -->
+    <section id="screen-level-6" class="app-screen">
+      <div class="space-y-6">
+        <!-- Level Header with Timer -->
+        <div class="flex flex-col sm:flex-row items-center justify-between bg-[#2C4A3E] text-white p-5 rounded-2xl shadow-lg border-b-4 border-[#D4A373] gap-3">
+          <div>
+            <span class="text-xs text-[#D4A373] font-bold uppercase tracking-wider">LEVEL 6</span>
+            <h2 class="text-xl sm:text-2xl font-bold font-jawa">Final Challenge (Evaluasi Akhir)</h2>
+          </div>
+          
+          <div class="flex items-center space-x-3">
+            <!-- Timer Badge -->
+            <div class="bg-red-900/80 px-4 py-2 rounded-xl border border-red-400 text-white font-mono font-bold text-base flex items-center gap-2 animate-pulse">
+              <i class="fas fa-clock"></i>
+              <span id="exam-timer">30:00</span>
+            </div>
+
+            <button onclick="navigateTo('dashboard')" class="bg-[#1E332B] hover:bg-[#D4A373] hover:text-[#2C4A3E] text-white px-3 py-2 rounded-xl text-xs font-bold transition">
+              Batal
+            </button>
+          </div>
+        </div>
+
+        <!-- Final Exam Card -->
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-amber-200 space-y-5">
+          <div class="flex justify-between items-center border-b pb-3">
+            <span class="text-xs font-bold text-gray-500 uppercase">30 Soal Evaluasi Paripurna</span>
+            <span id="l6-exam-progress" class="text-xs font-extrabold bg-[#FAEDCD] text-[#2C4A3E] px-3 py-1 rounded-full">Soal 1 / 30</span>
+          </div>
+
+          <div id="l6-exam-box" class="space-y-4">
+            <!-- Rendered via JS -->
+          </div>
+
+          <div class="flex justify-between items-center pt-4 border-t">
+            <button onclick="prevExamQuestion()" id="btn-exam-prev" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-5 py-2.5 rounded-xl text-xs font-bold transition disabled:opacity-50">
+              <i class="fas fa-chevron-left mr-1"></i> Sadurunge
+            </button>
+            <button onclick="nextExamQuestion()" id="btn-exam-next" class="bg-[#2C4A3E] hover:bg-[#1E332B] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition">
+              Sabanjure <i class="fas fa-chevron-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. RESULT SCREEN & GOOGLE SHEETS INTEGRATION -->
+    <section id="screen-result" class="app-screen">
+      <div class="max-w-3xl mx-auto glass-card rounded-3xl p-6 sm:p-10 shadow-2xl border border-[#D4A373]/50 space-y-8">
+        
+        <!-- Trophy Banner -->
+        <div class="text-center space-y-3">
+          <div class="w-24 h-24 bg-gradient-to-tr from-[#D4A373] to-amber-200 text-[#2C4A3E] rounded-full flex items-center justify-center mx-auto text-5xl shadow-xl border-4 border-white">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <h2 class="text-3xl font-extrabold text-[#2C4A3E] font-jawa">Laporan Asil Akhir</h2>
+          <p class="text-xs text-gray-500">PRANATACARA MASTER - Bahasa Jawa Kelas XII</p>
+        </div>
+
+        <!-- Result Metrics Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="bg-[#FAF7F2] p-4 rounded-2xl border border-amber-200">
+            <p class="text-[10px] text-gray-500 uppercase font-bold">Skor Akhir</p>
+            <p id="res-total-score" class="text-3xl font-extrabold text-[#2C4A3E]">0</p>
+          </div>
+          <div class="bg-[#FAF7F2] p-4 rounded-2xl border border-amber-200">
+            <p class="text-[10px] text-gray-500 uppercase font-bold">Persentase</p>
+            <p id="res-percentage" class="text-3xl font-extrabold text-[#2C4A3E]">0%</p>
+          </div>
+          <div class="bg-[#FAF7F2] p-4 rounded-2xl border border-amber-200">
+            <p class="text-[10px] text-gray-500 uppercase font-bold">Bener / Salah</p>
+            <p id="res-correct-wrong" class="text-xl font-bold text-gray-700 mt-1">0 / 0</p>
+          </div>
+          <div class="bg-[#FAF7F2] p-4 rounded-2xl border border-amber-200 flex flex-col justify-center items-center">
+            <p class="text-[10px] text-gray-500 uppercase font-bold">Kategori</p>
+            <span id="res-category-badge" class="mt-1 px-3 py-1 rounded-full text-xs font-extrabold bg-green-100 text-green-800">
+              SANGAT BAIK
+            </span>
+          </div>
+        </div>
+
+        <!-- Student Profile Summary -->
+        <div class="bg-[#FAEDCD]/50 p-4 rounded-2xl border border-[#D4A373]/30 text-xs sm:text-sm grid grid-cols-1 sm:grid-cols-3 gap-2">
+          <div><span class="text-gray-500">Nama:</span> <strong id="res-user-name" class="text-gray-800">-</strong></div>
+          <div><span class="text-gray-500">Kelas:</span> <strong id="res-user-kelas" class="text-gray-800">-</strong></div>
+          <div><span class="text-gray-500">No. Presensi:</span> <strong id="res-user-presensi" class="text-gray-800">-</strong></div>
+        </div>
+
+        <!-- Refleksiku Form (5 Interactive Questions) -->
+        <div class="bg-white p-6 rounded-2xl border border-amber-200 space-y-4">
+          <h3 class="font-bold text-base text-[#2C4A3E] border-b pb-2 flex items-center gap-2">
+            <i class="fas fa-heart text-red-500"></i> Form Refleksiku (5 Pitakon Refleksi)
+          </h3>
+          
+          <div class="space-y-3 text-xs sm:text-sm">
+            <div>
+              <p class="font-semibold text-gray-700">1. Kula sampun ngerteni teges, ayahan, lan struktur teks pranatacara kanthi cetha.</p>
+              <select id="ref-q1" class="mt-1 w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-[#FAF7F2]">
+                <option value="Sangat Setuju">Sangat Setuju (Paham Banget)</option>
+                <option value="Setuju">Setuju (Paham)</option>
+                <option value="Ragu-ragu">Ragu-ragu</option>
+                <option value="Durung Paham">Durung Paham</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700">2. Kula saged mbedakake ragam basa Krama Alus lan panggunaane ing adicara resmi.</p>
+              <select id="ref-q2" class="mt-1 w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-[#FAF7F2]">
+                <option value="Sangat Setuju">Sangat Setuju (Saged Sanget)</option>
+                <option value="Setuju">Setuju (Saged)</option>
+                <option value="Ragu-ragu">Ragu-ragu</option>
+                <option value="Durung Saged">Durung Saged</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700">3. Kula paham kepriye patrap, olah swara, lan solah bawa kang trep nalika dadi MC.</p>
+              <select id="ref-q3" class="mt-1 w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-[#FAF7F2]">
+                <option value="Sangat Setuju">Sangat Setuju</option>
+                <option value="Setuju">Setuju</option>
+                <option value="Ragu-ragu">Ragu-ragu</option>
+                <option value="Durung Paham">Durung Paham</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700">4. Kula siap lan percaya diri praktik dadi Pranatacara ing adicara sekolah/kelas.</p>
+              <select id="ref-q4" class="mt-1 w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-[#FAF7F2]">
+                <option value="Sangat Siap">Sangat Siap</option>
+                <option value="Siap">Siap</option>
+                <option value="Ragu-ragu">Ragu-ragu</option>
+                <option value="Durung Siap">Durung Siap</option>
+              </select>
+            </div>
+
+            <div>
+              <p class="font-semibold text-gray-700">5. Kesan lan pesen panjenengan babagan media PRANATACARA MASTER punika:</p>
+              <textarea id="ref-q5" rows="2" class="mt-1 w-full p-2.5 rounded-xl border border-gray-300 text-xs bg-[#FAF7F2]" placeholder="Tulis kesan utawa sarana panjenengan ing kene..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Sheets Integration Section -->
+        <div class="bg-emerald-50/80 p-6 rounded-2xl border border-emerald-300 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2 text-emerald-900 font-bold text-sm sm:text-base">
+              <i class="fas fa-file-excel text-emerald-700 text-xl"></i>
+              <span>Integrasi Google Sheets (Kirim Nilai)</span>
+            </div>
+            <button onclick="openModal('modal-gas-guide')" class="text-xs text-emerald-700 underline font-semibold hover:text-emerald-900">
+              <i class="fas fa-code mr-1"></i>Panduan Guru (Apps Script)
+            </button>
+          </div>
+
+          <p class="text-xs text-emerald-800 leading-relaxed">
+            Lebokake URL Google Apps Script Web App saka gurumu kanggo ngirim rekap nilai lan refleksi langsung menyang Google Sheets:
+          </p>
+
+          <div class="space-y-2">
+            <input type="url" id="gas-url-input" class="w-full px-4 py-2.5 text-xs rounded-xl border border-emerald-300 focus:ring-2 focus:ring-emerald-700 outline-none bg-white" placeholder="https://script.google.com/macros/s/.../exec">
+            
+            <button onclick="sendDataToGoogleSheets()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 px-6 rounded-xl text-xs shadow-lg transition flex items-center justify-center space-x-2">
+              <i class="fas fa-paper-plane"></i>
+              <span>KIRIM DATA MENYANG GOOGLE SHEETS</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Return Home Button -->
+        <div class="text-center">
+          <button onclick="navigateTo('dashboard')" class="bg-[#2C4A3E] hover:bg-[#1E332B] text-white font-bold py-3 px-8 rounded-xl text-sm transition shadow-md">
+            <i class="fas fa-home mr-2"></i> Kembali menyang Dashboard
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL 1: PETUNJUK APLIKASI -->
+  <div id="modal-petunjuk" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl border border-amber-300">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-lg text-[#2C4A3E] font-jawa"><i class="fas fa-info-circle text-[#D4A373] mr-2"></i>Petunjuk Penggunaan</h3>
+        <button onclick="closeModal('modal-petunjuk')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="text-xs sm:text-sm text-gray-700 space-y-2.5 leading-relaxed">
+        <p>1. <strong>Registrasi:</strong> Isinen Nama, Kelas, lan Presensi ing wiwitan.</p>
+        <p>2. <strong>Alur Level:</strong> Lampahi Level 1 nganti Level 6 kanthi urut. Level sabanjure bakal terbuka yen wis ngrampungake level sadurunge.</p>
+        <p>3. <strong>Skor:</strong> Saben jawaban bener bakal nambah skor total panjenengan.</p>
+        <p>4. <strong>Final Challenge:</strong> Level 6 kasusun saka 30 soal evaluasi lan dibatesi wektu 30 menit.</p>
+        <p>5. <strong>Google Sheets:</strong> Ing pungkasan (Halaman Hasil), kirim asil nilai lan refleksi menyang Google Sheets gurumu.</p>
+      </div>
+      <button onclick="closeModal('modal-petunjuk')" class="w-full bg-[#2C4A3E] text-white py-2.5 rounded-xl text-xs font-bold">Tutup Petunjuk</button>
+    </div>
+  </div>
+
+  <!-- MODAL 2: TUJUAN PEMBELAJARAN -->
+  <div id="modal-tujuan" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-lg w-full space-y-4 shadow-2xl border border-amber-300">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-lg text-[#2C4A3E] font-jawa"><i class="fas fa-bullseye text-[#D4A373] mr-2"></i>Tujuan Pembelajaran (Fase F)</h3>
+        <button onclick="closeModal('modal-tujuan')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="text-xs sm:text-sm text-gray-700 space-y-2 leading-relaxed">
+        <p>• Peserta didik mampu menganalisis struktur, isi, lan unggah-ungguh basa ing teks pranatacara.</p>
+        <p>• Peserta didik mampu menyusun rantaman adicara lan teks pranatacara kanthi runtut lan trep.</p>
+        <p>• Peserta didik mampu menerapkan teknik olah swara, olah basa, patrap/solah bawa, lan ngadi salira ing simulasi pranatacara.</p>
+        <p>• Peserta didik mampu mengevaluasi lan mengambil keputusan terpat adhedhasar studi kasus kahanan adicara.</p>
+      </div>
+      <button onclick="closeModal('modal-tujuan')" class="w-full bg-[#2C4A3E] text-white py-2.5 rounded-xl text-xs font-bold">Tutup</button>
+    </div>
+  </div>
+
+  <!-- MODAL 3: PANDUAN GOOGLE APPS SCRIPT (KANGGO GURU) -->
+  <div id="modal-gas-guide" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl p-6 max-w-2xl w-full space-y-4 shadow-2xl border border-emerald-400 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="font-bold text-base text-emerald-900"><i class="fas fa-code text-emerald-700 mr-2"></i>Kode Setup Google Apps Script (Untuk Guru)</h3>
+        <button onclick="closeModal('modal-gas-guide')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+      </div>
+
+      <div class="text-xs text-gray-700 space-y-2">
+        <p>1. Buat Google Sheet baru, beri header di Baris 1:</p>
+        <div class="bg-gray-100 p-2 rounded font-mono text-[11px] overflow-x-auto">
+          Timestamp | Nama | Kelas | Presensi | Skor | Persentase | Kategori | Refleksi
+        </div>
+        <p>2. Buka <strong>Extensions > Apps Script</strong>, hapus kode lama dan tempel kode berikut:</p>
+      </div>
+
+      <pre class="bg-gray-900 text-green-400 p-4 rounded-xl text-[11px] font-mono overflow-x-auto"><code>function doPost(e) {
+  try {
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var data = JSON.parse(e.postData.contents);
+    
+    sheet.appendRow([
+      data.timestamp,
+      data.nama,
+      data.kelas,
+      data.presensi,
+      data.skor,
+      data.persentase,
+      data.kategori,
+      JSON.stringify(data.refleksi)
+    ]);
+    
+    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+  } catch (error) {
+    return ContentService.createTextOutput("Error: " + error.toString()).setMimeType(ContentService.MimeType.TEXT);
+  }
+}</code></pre>
+
+      <div class="text-xs text-gray-700 space-y-1">
+        <p>3. Klik <strong>Deploy > New Deployment</strong>.</p>
+        <p>4. Pilih type: <strong>Web app</strong>.</p>
+        <p>5. Setel <strong>Who has access</strong>: <strong class="text-red-600">Anyone</strong>.</p>
+        <p>6. Salin <strong>Web App URL</strong> lalu bagikan ke para siswa.</p>
+      </div>
+
+      <button onclick="closeModal('modal-gas-guide')" class="w-full bg-emerald-800 text-white py-2 rounded-xl text-xs font-bold">Mengerti</button>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC & CONTENT ENGINES -->
+  <script>
+    /* GLOBAL APP STATE */
+    let appState = {
+      user: JSON.parse(localStorage.getItem('pranatacara_user')) || null,
+      scores: JSON.parse(localStorage.getItem('pranatacara_scores')) || { l1:0, l2:0, l3:0, l4:0, l5:0, l6:0 },
+      completedLevels: JSON.parse(localStorage.getItem('pranatacara_completed')) || [],
+      gasUrl: localStorage.getItem('pranatacara_gas_url') || '',
+      currentExamIndex: 0,
+      examTimerInterval: null,
+      examSecondsLeft: 1800 // 30 minutes
+    };
+
+    /* LEVEL CONFIGURATION */
+    const LEVEL_CONFIG = [
+      { id: 1, name: 'Kenal Pranatacara', desc: 'Pangerten, Ayahan, lan Syarat', icon: 'fa-book-reader' },
+      { id: 2, name: 'Bedah Teks', desc: 'Identifikasi 8 Struktur Teks', icon: 'fa-sitemap' },
+      { id: 3, name: 'Susun Rantaman', desc: 'Nglumpukake lan Ngurutake Adicara', icon: 'fa-cubes' },
+      { id: 4, name: 'Olah Swara lan Patrap', desc: 'Wicara, Virama, Wirasa, Wiraga', icon: 'fa-microphone-alt' },
+      { id: 5, name: 'Simulasi Acara', desc: 'Studi Kasus & Pengambilan Keputusan', icon: 'fa-theater-masks' },
+      { id: 6, name: 'Final Challenge', desc: '30 Soal Evaluasi Akhir (Timer 30 Menit)', icon: 'fa-trophy' }
+    ];
+
+    /* DATA LEVEL 1: QUIZ (5 MC) */
+    const LEVEL1_QUIZ = [
+      {
+        q: "Apa kang diarani Pranatacara ing kabudayan Jawa?",
+        options: [
+          "Wong sing nabuh gamelan nalika acara lumaku",
+          "Nimpuna/wong sing nglantarake lan ngatur lumakuning adicara",
+          "Wong sing nulis skenario drama ing panggung",
+          "Wong sing gadhah hajat/pemangku kuwajiban"
+        ],
+        answer: 1
+      },
+      {
+        q: "Tembung liya kanggo Pranatacara ing ngisor iki kang bener, KAJABA...",
+        options: [
+          "Pambiwara / Pranata Adicara",
+          "Master of Ceremony (MC)",
+          "Juru Paniti Priksa",
+          "Pranata Laksitaning Adicara"
+        ],
+        answer: 2
+      },
+      {
+        q: "Ayahan utama pambiwara nalika nglantarake adicara yaiku...",
+        options: [
+          "Mimpin lan ngatur lumakuning adicara saka pambuka nganti panutup",
+          "Menehi sumbangan dhuwit marang tamu",
+          "Nyiapake panganan ing pawon",
+          "Nyanyi lagu pop nalika istirahat"
+        ],
+        answer: 0
+      },
+      {
+        q: "Salah siji syarat penting dadi pranatacara kang becik yaiku wicara. Tegese...",
+        options: [
+          "Nganggo klambi kang larang regane",
+          "Pinter olah swara, artikulasi cetha, lan irama kang pas",
+          "Ndeke awak kanthi sombong",
+          "Maca teks kanthi cepet-cepetan"
+        ],
+        answer: 1
+      },
+      {
+        q: "Patrap utawa sikap nalika ngadeg ing ngarepe para rawuh diarani...",
+        options: [
+          "Wirama",
+          "Wicara",
+          "Wiraga / Solah bawa",
+          "Wirasa"
+        ],
+        answer: 2
+      }
+    ];
+
+    /* DATA LEVEL 2: 8 QUOTES FOR IDENTIFICATION */
+    const LEVEL2_QUOTES = [
+      { text: "Assalamu’alaikum Warahmatullahi Wabarakatuh. Sugeng siang para rawuh ingkang kinurmatan.", answer: "Salam Pambuka" },
+      { text: "Ingkang dahat kinurmatan Bapak Kepala SMA Negeri 1, para bapak ibu dwija, sarta kanca-kanca ingkang kula tresnani.", answer: "Atur Pakurmatan" },
+      { text: "Langkung rumiyin mangga kita ngaturaken puji syukur dhumateng Gusti Allah Ingkang Maha Kuos.", answer: "Atur Pamuji" },
+      { text: "Wondene tujuanipun adicara ing siang punika inggih punika mengeti Hari Kartini lan Gelar Karya P5.", answer: "Ancasing Gati" },
+      { text: "Saderengipun adicara dipunwiti, keparenga kula maosaken rantaman adicara ingkang sampun kasusun...", answer: "Rantaman Adicara" },
+      { text: "Nandhingi adicara ingkang kaping tiga inggih punika tanggap warsa saking Ketua Panitia, dhumateng mas Budi kassumanggaaken.", answer: "Nglantarake Adicara" },
+      { text: "Mekaten adicara ingkang sampun lumampah. Kula minangka pambiwara nyuwun agunging pangaksama manawi wonten kalepatan.", answer: "Panutup & Nyuwun Ngapura" },
+      { text: "Wassalamu’alaikum Warahmatullahi Wabarakatuh.", answer: "Salam Panutup" }
+    ];
+
+    const LEVEL2_STRUCTURES = [
+      "Salam Pambuka", "Atur Pakurmatan", "Atur Pamuji", "Ancasing Gati",
+      "Rantaman Adicara", "Nglantarake Adicara", "Panutup & Nyuwun Ngapura", "Salam Panutup"
+    ];
+
+    /* DATA LEVEL 3: ORDERING ITEMS */
+    let level3UserOrder = [
+      { id: 4, text: "Tanggap Sabda saking Bapak Kepala Sekolah" },
+      { id: 1, text: "Pambuka (Mawa wosan Basmalah)" },
+      { id: 6, text: "Donga lan Panutup" },
+      { id: 2, text: "Atur Pamuji Syukur lan Atur Pambagya Harja Panitia" },
+      { id: 5, text: "Pentas Seni lan Hiburan Siswa" },
+      { id: 3, text: "Atur Perpisahan saking Wakiling Siswa Kelas XII" }
+    ];
+    const LEVEL3_CORRECT_ORDER = [1, 2, 3, 4, 5, 6];
+
+    /* DATA LEVEL 4: MODULES & CASES */
+    const LEVEL4_MODULES = {
+      swara: `
+        <h4 class="font-bold text-[#2C4A3E] text-base mb-1">1. Olah Swara (Wicara & Wirama)</h4>
+        <p class="text-gray-700">Olah swara yaiku teknik ngatur artikulasi, intonasi, lan irama swara nalika ngendika:</p>
+        <ul class="list-disc ml-5 space-y-1 text-xs text-gray-600 mt-2">
+          <li><strong>Artikulasi (Kejelasan):</strong> Pengecapan aksara swara (a, i, u, e, o) kudu cetha.</li>
+          <li><strong>Mantra/Irama (Wirama):</strong> Rendah-tinggi lan cepet-singkate swara kudu disesuaiake karo suasana adicara (resmi = mantep, santai = renyah).</li>
+          <li><strong>Volume Swara:</strong> Cukup krungu dening kabeh tamu tanpa krasa bengok-bengok.</li>
+        </ul>
+      `,
+      basa: `
+        <h4 class="font-bold text-[#2C4A3E] text-base mb-1">2. Olah Basa (Unggah-ungguh Basa)</h4>
+        <p class="text-gray-700">Pambiwara kudu nggunakake Basa Jawa Krama Alus / Inggil kang trep:</p>
+        <ul class="list-disc ml-5 space-y-1 text-xs text-gray-600 mt-2">
+          <li>Aja salah nggunakake tembung krama kanggo awake dhewe (tuladha salah: <em>"kula tindak"</em> -> bener: <em>"kula mriki / mangkat"</em>).</li>
+          <li>Gunaake tembung pamilih (diksi) kang endah lan kurmat marang para rawuh.</li>
+        </ul>
+      `,
+      patrap: `
+        <h4 class="font-bold text-[#2C4A3E] text-base mb-1">3. Patrap & Solah Bawa (Wiraga)</h4>
+        <p class="text-gray-700">Sikap lan obahing awak nalika ngadeg ing ngarep panggung:</p>
+        <ul class="list-disc ml-5 space-y-1 text-xs text-gray-600 mt-2">
+          <li><strong>Ngadeg Jegeg:</strong> Awak tegak, pundhak rileks, ora loyo utawa bungkuk.</li>
+          <li><strong>Pandangan Mripat:</strong> Nyawang para rawuh kanthi rata (eye contact), ora mung ndeleng ndhuwur utawa ngisor.</li>
+          <li><strong>Jestur Tangan:</strong> Ngenteni ing ngarep padhang (ngendhang) utawa nyekel mic kanthi stabil lan luwes.</li>
+        </ul>
+      `,
+      salira: `
+        <h4 class="font-bold text-[#2C4A3E] text-base mb-1">4. Ngadi Salira (Rias & Busana)</h4>
+        <p class="text-gray-700">Penampilan fisik lan busana kudu nyocokake kaliyan jenis adicara:</p>
+        <ul class="list-disc ml-5 space-y-1 text-xs text-gray-600 mt-2">
+          <li>Adicara Tradisional/Resmi: Nganggo Busana Jangkep Jawa (Beskap/Kebaya).</li>
+          <li>Adicara Modhern/Sekolah: Nganggo Seragam Resmi utawa Batik Rapih.</li>
+        </ul>
+      `
+    };
+
+    const LEVEL4_CASES = [
+      {
+        q: "Kasus 1: Nalika MC ngendika 'Kula sampun rawuh ing panggung punika'. Apa sing salah saka olah basa punika?",
+        options: [
+          "Ora ana sing salah, wis bener Krama Inggil",
+          "Tembung 'rawuh' mung kanggo wong liya, kanggo awake dhewe kudu nggunakake 'dhateng/teka'",
+          "Kudu nganggo basa ngoko wae",
+          "Swarane kurang banter"
+        ],
+        answer: 1
+      },
+      {
+        q: "Kasus 2: MC ngadeg kanthi nyandhak meja, sikile slunjur, lan mripate mung ndeleng teks wae. Sikap iki nglanggar prinsip...",
+        options: [
+          "Wirama",
+          "Wiraga / Solah bawa kang patut",
+          "Wicara",
+          "Ngadi Salira"
+        ],
+        answer: 1
+      },
+      {
+        q: "Kasus 3: Nalika adicara mawa suasana duka (lelayu), pambiwara kudu nggunakake wirama swara kang...",
+        options: [
+          "Semangat, sora, lan cepet",
+          "Alus, alon, lan kebak rasa belasungkawa (wirasa duka)",
+          "Kaya wong nembang rock",
+          "Banter lan kebak guyon"
+        ],
+        answer: 1
+      },
+      {
+        q: "Kasus 4: Pambiwara nyekel microphone kanthi nempel ing lambe lan tangane gemeter. Cara ngadhepi masalah mik iki yaiku...",
+        options: [
+          "Sirahe ditundhukake wae",
+          "Jarak mic udakara 3-5 cm saka lambe lan dicekel mantep mawa tangan rileks",
+          "Mic dipindhah menyang tangan kiwa terus",
+          "Mbuwang microphone"
+        ],
+        answer: 1
+      },
+      {
+        q: "Kasus 5: Tembung 'Matur nuwun' yen dikramakake Inggil kanggo ngaturaken panuwun marang para rawuh kang trep yaiku...",
+        options: [
+          "Matur suwun banget",
+          "Ngaturaken agunging panuwun / matur nuwun ingkang tanpa upami",
+          "Suwun nggih bapak ibu",
+          "Matur nuwun sewu"
+        ],
+        answer: 1
+      }
+    ];
+
+    /* DATA LEVEL 5: SCENARIOS (10 CASES) */
+    const LEVEL5_SCENARIOS = [
+      {
+        q: "Situasi 1: Sound system dumadakan mati/trouble nalika sampeyan lagi maosake rantaman adicara. Apa sing kudu ditindakake MC?",
+        options: [
+          "Mlayu metu saka panggung amarga isin",
+          "Tetep tenang, nyuwun pangapunten kanthi sopan marang para rawuh, lan ngenteni operator nyiapake mic cadangan",
+          "Bengok-bengok tanpa mic supaya krungu",
+          "Marani operator sound system lan nesu-nesu ing panggung"
+        ],
+        answer: 1
+      },
+      {
+        q: "Situasi 2: Pembicara (Bapak Kepala Sekolah) durung rawuh ing lokasi, nanging wektu adicara wis kudu diwiti. Kepriye solusining MC?",
+        options: [
+          "Ngenteni tanpa ngendika apa-apa ing panggung",
+          "Membatalkan kabeh adicara",
+          "Koordinasi karo panitia kanggo ngowahi sauntara urutan adicara utawa menehi selingan/hiburan kang trep",
+          "Langsung nutup adicara"
+        ],
+        answer: 2
+      },
+      {
+        q: "Situasi 3: Wektu adicara wis mepet banget/mundhur 30 menit saka jadwal. Apa sing kudu dilakoni MC?",
+        options: [
+          "Maosake teks kanthi cepet banget nganti ora cetha",
+          "Nyingkat atur pambuka lan pambiwara kanthi tetep mawa unggah-ungguh tanpa ngurangi nilai khidmat",
+          "Nglumpatake kabeh acara langsung panutup",
+          "Muring-muring ing panggung amarga acara telat"
+        ],
+        answer: 1
+      },
+      {
+        q: "Situasi 4: Nalika nglantarake acara perpisahan, ana tamu kang ngguyu-ngguyu sora lan ngganggu kahanan. MC sing profesional bakal...",
+        options: [
+          "Mengendalikan suasana kanthi wicara kang tetep wibawa lan njaga konsentrasi fokus adicara",
+          "Ngentrok tamu mau ing ngarep umum",
+          "Lunga saka panggung",
+          "Ngguyu bareng tamu mau kanthi sora"
+        ],
+        answer: 0
+      },
+      {
+        q: "Situasi 5: Panitia menehi owah-owahan susunan acara dumadakan nalika adicara wis lumaku. Tindakan MC yaiku...",
+        options: [
+          "Tolak owah-owahan amarga wis nulis teks",
+          "Cathet owah-owahan kasebut lan lantarake kanthi luwes tanpa nggawe bingung para rawuh",
+          "Nesu marang panitia ing ngarep panggung",
+          "Pasrah lan meneng wae"
+        ],
+        answer: 1
+      },
+      {
+        q: "Situasi 6: Teks pambiwara sing wis disiapake keri/ilag sadurunge munggah panggung. MC kudu...",
+        options: [
+          "Tetep munggah lan ngendika adhedhasar pangerten lan struktur kang wis dadi patokan (impromptu/spontan)",
+          "Batal dadi MC lan golek gantine",
+          "Nangis ing buri panggung",
+          "Njaluk kabeh tamu ngenteni 2 jam"
+        ],
+        answer: 0
+      },
+      {
+        q: "Situasi 7: Nalika nyebutake jeneng lan gelar pengisi acara, MC salah ngucapake. Cara mbenerake kang sopan yaiku...",
+        options: [
+          "Langsung nyuwun pangapunten kanthi alus lan ngucapake gelar/jeneng kang bener",
+          "Ethok-ethok ora ngerti yen salah",
+          "Nyalahake panitia sing nulis teks",
+          "Ngguyu banter ing mik"
+        ],
+        answer: 0
+      },
+      {
+        q: "Situasi 8: Tamu undangan katon wis kesel lan bosen amarga acara dawa banget. Solusi MC yaiku...",
+        options: [
+          "Menehi ice breaking utawa atur pambuka kang renyah lan menehi semangat kanthi wicara kang luwih urip",
+          "Mundhakaken volume swara dadi bengok-bengok",
+          "Nengetake tamu supaya ora bosen",
+          "Langsung ninggalake acara"
+        ],
+        answer: 0
+      },
+      {
+        q: "Situasi 9: Nalika acara purnawiyata (perpisahan), suasana dadi haru banget nalika siswa sungkeman. Swasana swara MC kudu...",
+        options: [
+          "Swara gembira lan kebak guyon",
+          "Swara mantep, alus, lan kebak rasa trusing ati (khidmad)",
+          "Bengok-bengok semangat",
+          "Mung meneng wae ora ngendika"
+        ],
+        answer: 1
+      },
+      {
+        q: "Situasi 10: Adicara wis rampung kabeh. Tugas pungkasan MC sadurunge ninggalake panggung yaiku...",
+        options: [
+          "Ngaturaken panutup, nyuwun ngapura yen ana kalepatan, ngaturaken salam panutup, lan mundur kanthi sopan",
+          "Mlayu panggung tanpa pamit",
+          "Mateni mic lan langsung lungguh",
+          "Njaluk tepok tangan kanggo awake dhewe"
+        ],
+        answer: 0
+      }
+    ];
+
+    /* DATA LEVEL 6: 30 FINAL EXAM QUESTIONS */
+    const FINAL_EXAM_QUESTIONS = [
+      // 1-15: Multiple Choice
+      { id:1, type:'pg', q:"Tembung 'Pranatacara' asale saka tembung 'Pranata' lan 'Acara'. Tegese pranata yaiku...", options:["Wong sing nabuh","Wong sing ngatur/mimpin","Wong sing nulis","Wong sing nyemak"], answer:1 },
+      { id:2, type:'pg', q:"Unggah-ungguh basa kang digunakake dening pambiwara nalika ngadhepi para rawuh umum yaiku...", options:["Basa Ngoko Lugu","Basa Ngoko Alus","Basa Krama Alus / Inggil","Basa Indonesia mix"], answer:2 },
+      { id:3, type:'pg', q:"Ukara 'Puji syukur kagandheng ing ngarsa dalem Gusti' kalebu ing struktur...", options:["Salam pambuka","Atur pamuji","Ancasing gati","Panutup"], answer:1 },
+      { id:4, type:'pg', q:"'Ancasing gati' ing teks pranatacara tegese...", options:["Salam pambuka acara","Tujuan utawa wosing adicara","Urutan acara","Donga pungkasan"], answer:1 },
+      { id:5, type:'pg', q:"Sikap 'Ngendhang' ing solah bawa tegese...", options:["Tangan sedhakep ing dhadha","Tangane disendhakake ing ngarep padhang kanthi sopan","Tangan ing njero sak","Tangan mbeber ing ndhuwur"], answer:1 },
+      { id:6, type:'pg', q:"Wicara kang cetha babagan pengecapan aksara swara diarani...", options:["Intonasi","Artikulasi","Wirasa","Ngadi Salira"], answer:1 },
+      { id:7, type:'pg', q:"Nalika ngadhepi adicara manten tradisional Jawa, pambiwara kudu nggunakake busana...", options:["Jas Modhern","Busana Jangkep Jawa (Beskap/Kebaya)","Seragam Batik Sekolah","Klambi Kasual"], answer:1 },
+      { id:8, type:'pg', q:"Basa Krama Inggil saka tembung 'omah' yen kanggo ngurmati wong liya yaiku...", options:["Griya","Dalem","Omah","Barak"], answer:1 },
+      { id:9, type:'pg', q:"Panutup ing teks pambiwara biasane ngemot...", options:["Nyuwun pangaksama atas sekecahing kalepatan","Njaluk bayaran","Ngekeki kado","Ngajak mangan"], answer:0 },
+      { id:10, type:'pg', q:"Urutan struktur pambuka pranatacara kang bener yaiku...", options:["Atur pamuji -> Salam -> Atur pakurmatan","Salam pambuka -> Atur pakurmatan -> Atur pamuji","Ancasing gati -> Salam -> Panutup","Rantaman -> Salam -> Atur pamuji"], answer:1 },
+      { id:11, type:'pg', q:"Kaluwihan pambiwara kang nduweni 'Wirasa' kang becik yaiku...", options:["Saged ngatur emosi lan jiwa adicara supaya pas karo swasana","Pinter nembang wae","Nganggo klambi paling larang","Swara paling banter"], answer:0 },
+      { id:12, type:'pg', q:"Apa kang kudu dilakoni pambiwara yen ana pengisi acara kang teka telat?", options:["Langsung dibatalake acaranep","Koordinasi karo panitia kanggo penyesuaian urutan acara","Muring-muring ing mic","Meneng wae nganti teka"], answer:1 },
+      { id:13, type:'pg', q:"Ngarahake pandangan mripat (eye contact) nalika dadi MC kang bener yaiku...", options:["Mung ndeleng ngisor/lantai","Ndeleng panggung ndhuwur wae","Ndeleng para rawuh kanthi merata lan luwes","Mripat merem"], answer:2 },
+      { id:14, type:'pg', q:"Pranatacara uga diarani 'Pambiwara'. Tembung pambiwara tegese...", options:["Wong sing nyiarake/ngandharake kabar lan acara","Wong sing nulis cerita","Wong sing nyanyi","Wong sing njaga keamanan"], answer:0 },
+      { id:15, type:'pg', q:"Basa Jawa krama alus kanggo tembung 'mangan' yen kanggo tamu inggih punika...", options:["Mada","Neda","Dhahat / Dhahar","Kembul"], answer:2 },
+
+      // 16-20: Benar / Salah (True / False)
+      { id:16, type:'tf', q:"[Benar/Salah] Pambiwara olah nggunakake basa Krama Inggil kanggo awake dhewe (tuladha: 'Kula sampun rawuh').", options:["Bener","Salah"], answer:1 },
+      { id:17, type:'tf', q:"[Benar/Salah] Tanggap pambagya harja yaiku pidhato pambuka saka ketua panitia utawa pemangku hajat.", options:["Bener","Salah"], answer:0 },
+      { id:18, type:'tf', q:"[Benar/Salah] Nalika mikrofon mati, MC profesional kudu langsung mlayu ninggalake panggung.", options:["Bener","Salah"], answer:1 },
+      { id:19, type:'tf', q:"[Benar/Salah] Olah swara kalebu pengaturan artikulasi, intonasi, lan tempo wicara.", options:["Bener","Salah"], answer:0 },
+      { id:20, type:'tf', q:"[Benar/Salah] Rantaman adicara ora perludinaosake ing wiwitan adicara.", options:["Bener","Salah"], answer:1 },
+
+      // 21-25: Matching / Cocokkan
+      { id:21, type:'pg', q:"[Cocokake] Pasangake tembung 'Atur Pakurmatan' karo ukara kang trep:", options:["Sugeng enjing para tamu","Ingkang dahat kinurmatan Bapak Kepala Sekolah","Matur nuwun ingkang tanpa upami","Wassalamu'alaikum"], answer:1 },
+      { id:22, type:'pg', q:"[Cocokake] Pasangake tembung 'Salam Pambuka' karo ukara kang trep:", options:["Sugeng enjing / Assalamu'alaikum","Kula nyuwun pangapunten","Puji syukur dhumateng Gusti","Sugeng kondur"], answer:0 },
+      { id:23, type:'pg', q:"[Cocokake] Pasangake tembung 'Ancasing Gati' karo ukara kang trep:", options:["Wondene tujuan adicara punika mengeti Hari Kartini","Mugi Gusti paring berkah","Kula maosake urutan acara","Nyuwun ngapura"], answer:0 },
+      { id:24, type:'pg', q:"[Cocokake] Pasangake istilah 'Wiraga' karo tegese:", options:["Olah swara lan irama","Patrap lan solah bawa obahing awak","Ketepatan basa Krama","Busana lan rias"], answer:1 },
+      { id:25, type:'pg', q:"[Cocokake] Pasangake istilah 'Ngadi Salira' karo tegese:", options:["Pengaturan swara","Rias, busana, lan kerapihan fisik","Pilihan tembung basa","Pikiran lan konsentrasi"], answer:1 },
+
+      // 26-30: Studi Kasus Kompleks
+      { id:26, type:'pg', q:"Studi Kasus 1: Adicara Perpisahan Sekolah mundur 45 menit amarga listrik padam. Kepriye strategi MC kang paling trep?", options:["Mbilang marang tamu yen acara dibatalake","Nyingkat pambuka lan penutup tanpa nyuda rasa kurmat sarta njaga tempo acara tetep khidmad","Bengok-bengok nesu ing panggung","Langsung menyang acara hiburan wae"], answer:1 },
+      { id:27, type:'pg', q:"Studi Kasus 2: Sampeyan dadi MC Seminar Basa Jawa. Naskah kang disiapake panitia akeh tembung sing ora konsisten Kramane. Tindakan sampeyan?", options:["Tetep maca senajan salah","Lakukan penyuntingan/revisi cilik ing teks sadurunge munggah panggung supaya manut unggah-ungguh","Moyoki panitia ing ngarep peserta","Ngganti basa Indonesia kabeh"], answer:1 },
+      { id:28, type:'pg', q:"Studi Kasus 3: Nalika adicara mawa swasana duka lelayu, salah siji tamu ngguyu-ngguyu sora. Tindakan MC kang wicaksana?", options:["Mengetan kanthi wicara alus lan wibawa tanpa nyudutake tamu mau lan njaga swasana tetep duka khidmad","Ngejak kabeh tamu ngguyu","Mbayar satpam kanggo ngetokake tamu kasebut kanthi kasar","Mubeng panggung"], answer:0 },
+      { id:29, type:'pg', q:"Studi Kasus 4: Pejabat utama kang kudu menehi sambutan nembung yen beliau kudu cepet-cepet kondur amarga ana tugas mendadak. Solusi MC?", options:["Nolak panyuwunan pejabat kasebut","Majuake jadwal sambutan pejabat kasebut kanthi wicara pangantar kang luwes marang para rawuh","Nutup adicara langsung","Ngenteni nganti kabeh acara rampung"], answer:1 },
+      { id:30, type:'pg', q:"Studi Kasus 5: Nalika sampeyan nglantarake adicara, mikrofon nyedhiyakake swara 'feedback/menging' kang serak. Tindakan teknis MC?", options:["Mbaleni mic adoh sethithik saka speaker utama lan nyekel kanthi jarak kang stabil","Uncalake mikrofon","Mateni kabeh sound system","Nangis ing panggung"], answer:0 }
+    ];
+
+    /* APP INITIALIZATION & NAVIGATION ENGINE */
+    window.addEventListener('DOMContentLoaded', () => {
+      checkUserState();
+      renderDashboard();
+    });
+
+    function checkUserState() {
+      if (appState.user) {
+        document.getElementById('main-navbar').classList.remove('hidden');
+        updateNavScore();
+      }
+    }
+
+    function startAppFlow() {
+      if (appState.user) {
+        navigateTo('dashboard');
+      } else {
+        navigateTo('register');
+      }
+    }
+
+    function handleRegistration(e) {
+      e.preventDefault();
+      const nama = document.getElementById('reg-nama').value.trim();
+      const kelas = document.getElementById('reg-kelas').value.trim();
+      const presensi = document.getElementById('reg-presensi').value.trim();
+
+      if (!nama || !kelas || !presensi) return;
+
+      appState.user = { nama, kelas, presensi };
+      localStorage.setItem('pranatacara_user', JSON.stringify(appState.user));
+
+      document.getElementById('main-navbar').classList.remove('hidden');
+      updateNavScore();
+      navigateTo('dashboard');
+      
+      Swal.fire({
+        title: `Sugeng Rawuh, ${nama}!`,
+        text: 'Registrasi kasil. Mangga miwiti sinau saka Level 1.',
+        icon: 'success',
+        confirmButtonColor: '#2C4A3E'
+      });
+    }
+
+    function navigateTo(screenId) {
+      // Hide all screens
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+
+      // Resolve screen element
+      let targetScreen = document.getElementById(screenId);
+      if (!targetScreen) {
+        targetScreen = document.getElementById('screen-' + screenId);
+      }
+
+      // Prevent cover screen access if user is already registered and moving back
+      if (screenId === 'cover' && appState.user) {
+        targetScreen = document.getElementById('screen-dashboard');
+      }
+
+      if (targetScreen) {
+        targetScreen.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // Screen specific render triggers
+      if (screenId === 'dashboard' || screenId === 'screen-dashboard') {
+        renderDashboard();
+      } else if (screenId === 'level-1' || screenId === 'screen-level-1') {
+        initLevel1();
+      } else if (screenId === 'level-2' || screenId === 'screen-level-2') {
+        initLevel2();
+      } else if (screenId === 'level-3' || screenId === 'screen-level-3') {
+        renderLevel3Ordering();
+      } else if (screenId === 'level-4' || screenId === 'screen-level-4') {
+        initLevel4();
+      } else if (screenId === 'level-5' || screenId === 'screen-level-5') {
+        initLevel5();
+      } else if (screenId === 'level-6' || screenId === 'screen-level-6') {
+        startLevel6Exam();
+      } else if (screenId === 'result' || screenId === 'screen-result') {
+        renderResultScreen();
+      }
+    }
+
+    function updateNavScore() {
+      const total = Object.values(appState.scores).reduce((a, b) => a + b, 0);
+      document.getElementById('nav-total-score').innerText = total;
+    }
+
+    function renderDashboard() {
+      if (!appState.user) return;
+
+      document.getElementById('dash-user-name').innerText = appState.user.nama;
+      document.getElementById('dash-user-kelas').innerText = appState.user.kelas;
+      document.getElementById('dash-user-presensi').innerText = appState.user.presensi;
+
+      const completedCount = appState.completedLevels.length;
+      const progressPercent = Math.round((completedCount / 6) * 100);
+
+      document.getElementById('dash-progress-percent').innerText = `${progressPercent}%`;
+      document.getElementById('dash-progress-bar').style.width = `${progressPercent}%`;
+      document.getElementById('dash-completed-count').innerText = completedCount;
+
+      updateNavScore();
+
+      // Render 6 Level Cards
+      const container = document.getElementById('level-cards-container');
+      container.innerHTML = '';
+
+      LEVEL_CONFIG.forEach((lvl, index) => {
+        const isUnlocked = index === 0 || appState.completedLevels.includes(lvl.id - 1);
+        const isCompleted = appState.completedLevels.includes(lvl.id);
+        const levelScore = appState.scores[`l${lvl.id}`] || 0;
+
+        const card = document.createElement('div');
+        card.className = `glass-card p-5 rounded-2xl border transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${
+          isUnlocked 
+            ? 'border-[#D4A373] shadow-md hover:shadow-xl hover:-translate-y-1 cursor-pointer bg-white' 
+            : 'border-gray-200 bg-gray-100/70 opacity-60 cursor-not-allowed'
+        }`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-[10px] font-extrabold uppercase tracking-widest px-2.5 py-1 rounded-full ${
+                isCompleted ? 'bg-green-100 text-green-800' : (isUnlocked ? 'bg-[#FAEDCD] text-[#2C4A3E]' : 'bg-gray-200 text-gray-500')
+              }">
+                LEVEL ${lvl.id} ${isCompleted ? '✓ PARIPURNA' : ''}
+              </span>
+              <i class="fas ${isUnlocked ? (isCompleted ? 'fa-check-circle text-green-600' : 'fa-unlock text-[#D4A373]') : 'fa-lock text-gray-400'} text-base"></i>
+            </div>
+
+            <div class="flex items-center space-x-3 mb-2">
+              <div class="w-10 h-10 rounded-xl bg-[#2C4A3E] text-[#D4A373] flex items-center justify-center text-lg shadow-sm">
+                <i class="fas ${lvl.icon}"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-[#2C4A3E] text-base font-jawa">${lvl.name}</h4>
+                <p class="text-xs text-gray-500">${lvl.desc}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center text-xs">
+            <span class="text-gray-500">Skor Level: <strong class="text-[#2C4A3E]">${levelScore}</strong></span>
+            <span class="font-bold ${isUnlocked ? 'text-[#2C4A3E]' : 'text-gray-400'}">
+              ${isUnlocked ? 'Miwiti <i class="fas fa-arrow-right ml-1"></i>' : 'Kunci'}
+            </span>
+          </div>
+        `;
+
+        if (isUnlocked) {
+          card.onclick = () => navigateTo(`level-${lvl.id}`);
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    /* LEVEL 1 ENGINE */
+    let l1CurrentIndex = 0;
+    let l1ScoreAcc = 0;
+
+    function initLevel1() {
+      l1CurrentIndex = 0;
+      l1ScoreAcc = 0;
+      renderL1Question();
+    }
+
+    function renderL1Question() {
+      const qData = LEVEL1_QUIZ[l1CurrentIndex];
+      document.getElementById('l1-quiz-progress').innerText = `Soal ${l1CurrentIndex + 1} / 5`;
+
+      const box = document.getElementById('l1-question-box');
+      box.innerHTML = `
+        <p class="font-semibold text-gray-800 text-sm sm:text-base">${l1CurrentIndex + 1}. ${qData.q}</p>
+        <div class="space-y-2 mt-3">
+          ${qData.options.map((opt, idx) => `
+            <button onclick="answerL1(${idx})" class="w-full text-left p-3 rounded-xl border border-gray-200 hover:border-[#2C4A3E] hover:bg-[#FAEDCD]/40 text-xs sm:text-sm font-medium transition flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-[#2C4A3E]/10 text-[#2C4A3E] text-xs flex items-center justify-center font-bold">${String.fromCharCode(65 + idx)}</span>
+              <span>${opt}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function answerL1(idx) {
+      const qData = LEVEL1_QUIZ[l1CurrentIndex];
+      if (idx === qData.answer) {
+        l1ScoreAcc += 20;
+        Swal.fire({ title: 'Bener!', text: '+20 Skor', icon: 'success', timer: 1000, showConfirmButton: false });
+      } else {
+        Swal.fire({ title: 'Kurang Trep!', text: 'Jawaban durung bener.', icon: 'error', timer: 1200, showConfirmButton: false });
+      }
+
+      l1CurrentIndex++;
+      if (l1CurrentIndex < LEVEL1_QUIZ.length) {
+        setTimeout(renderL1Question, 1200);
+      } else {
+        finishLevel(1, l1ScoreAcc);
+      }
+    }
+
+    /* LEVEL 2 ENGINE */
+    let l2CurrentIndex = 0;
+    let l2ScoreAcc = 0;
+
+    function initLevel2() {
+      l2CurrentIndex = 0;
+      l2ScoreAcc = 0;
+      renderL2Question();
+    }
+
+    function renderL2Question() {
+      const item = LEVEL2_QUOTES[l2CurrentIndex];
+      document.getElementById('l2-game-progress').innerText = `Soal ${l2CurrentIndex + 1} / 8`;
+      document.getElementById('l2-quote-card').innerHTML = `"${item.text}"`;
+
+      const optionsGrid = document.getElementById('l2-options-grid');
+      optionsGrid.innerHTML = LEVEL2_STRUCTURES.map(st => `
+        <button onclick="answerL2('${st}')" class="p-2.5 rounded-xl border border-gray-300 hover:border-[#2C4A3E] hover:bg-[#FAEDCD] text-xs font-bold text-gray-700 transition">
+          ${st}
+        </button>
+      `).join('');
+    }
+
+    function answerL2(selected) {
+      const item = LEVEL2_QUOTES[l2CurrentIndex];
+      if (selected === item.answer) {
+        l2ScoreAcc += 12.5;
+        Swal.fire({ title: 'Bener!', text: 'Identifikasi struktur trep (+12.5)', icon: 'success', timer: 1000, showConfirmButton: false });
+      } else {
+        Swal.fire({ title: 'Kurang Trep!', text: `Kang bener yaiku: ${item.answer}`, icon: 'error', timer: 1500, showConfirmButton: false });
+      }
+
+      l2CurrentIndex++;
+      if (l2CurrentIndex < LEVEL2_QUOTES.length) {
+        setTimeout(renderL2Question, 1500);
+      } else {
+        finishLevel(2, Math.round(l2ScoreAcc));
+      }
+    }
+
+    /* LEVEL 3 ENGINE (ORDERING) */
+    function renderLevel3Ordering() {
+      const listContainer = document.getElementById('l3-ordering-list');
+      listContainer.innerHTML = '';
+
+      level3UserOrder.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between p-3 bg-[#FAF7F2] rounded-xl border border-amber-300 text-xs sm:text-sm font-medium';
+        row.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <span class="w-7 h-7 rounded-lg bg-[#2C4A3E] text-amber-200 font-bold flex items-center justify-center text-xs">${index + 1}</span>
+            <span>${item.text}</span>
+          </div>
+          <div class="flex space-x-1">
+            <button onclick="moveL3Item(${index}, -1)" class="w-8 h-8 rounded-lg bg-gray-200 hover:bg-[#2C4A3E] hover:text-white transition flex items-center justify-center"><i class="fas fa-chevron-up"></i></button>
+            <button onclick="moveL3Item(${index}, 1)" class="w-8 h-8 rounded-lg bg-gray-200 hover:bg-[#2C4A3E] hover:text-white transition flex items-center justify-center"><i class="fas fa-chevron-down"></i></button>
+          </div>
+        `;
+        listContainer.appendChild(row);
+      });
+    }
+
+    function moveL3Item(index, direction) {
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= level3UserOrder.length) return;
+
+      const temp = level3UserOrder[index];
+      level3UserOrder[index] = level3UserOrder[targetIndex];
+      level3UserOrder[targetIndex] = temp;
+
+      renderLevel3Ordering();
+    }
+
+    function checkLevel3Ordering() {
+      const userIds = level3UserOrder.map(x => x.id);
+      let isCorrect = true;
+      for (let i = 0; i < LEVEL3_CORRECT_ORDER.length; i++) {
+        if (userIds[i] !== LEVEL3_CORRECT_ORDER[i]) {
+          isCorrect = false;
+          break;
+        }
+      }
+
+      if (isCorrect) {
+        Swal.fire({
+          title: 'Sampurna!',
+          text: 'Rantaman adicara wis runtut lan bener (+100 Skor)!',
+          icon: 'success',
+          confirmButtonColor: '#2C4A3E'
+        }).then(() => finishLevel(3, 100));
+      } else {
+        Swal.fire({
+          title: 'Durung Runtut!',
+          text: 'Coba priksa maneh urutan adicara pambuka nganti panutup.',
+          icon: 'warning',
+          confirmButtonColor: '#2C4A3E'
+        });
+      }
+    }
+
+    /* LEVEL 4 ENGINE */
+    let l4CurrentCaseIndex = 0;
+    let l4ScoreAcc = 0;
+
+    function initLevel4() {
+      switchL4Tab('swara');
+      l4CurrentCaseIndex = 0;
+      l4ScoreAcc = 0;
+      renderL4Case();
+    }
+
+    function switchL4Tab(tabKey) {
+      document.querySelectorAll('.l4-tab-btn').forEach(btn => {
+        btn.classList.remove('bg-[#2C4A3E]', 'text-white');
+        btn.classList.add('bg-gray-200', 'text-gray-700');
+      });
+
+      const activeBtn = document.getElementById(`tab-btn-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-gray-200', 'text-gray-700');
+        activeBtn.classList.add('bg-[#2C4A3E]', 'text-white');
+      }
+
+      document.getElementById('l4-tab-content').innerHTML = LEVEL4_MODULES[tabKey];
+    }
+
+    function renderL4Case() {
+      const cData = LEVEL4_CASES[l4CurrentCaseIndex];
+      document.getElementById('l4-game-progress').innerText = `Kasus ${l4CurrentCaseIndex + 1} / 5`;
+
+      const box = document.getElementById('l4-case-box');
+      box.innerHTML = `
+        <p class="font-semibold text-gray-800 text-sm sm:text-base">${cData.q}</p>
+        <div class="space-y-2 mt-3">
+          ${cData.options.map((opt, idx) => `
+            <button onclick="answerL4(${idx})" class="w-full text-left p-3 rounded-xl border border-gray-200 hover:border-[#2C4A3E] hover:bg-[#FAEDCD]/40 text-xs sm:text-sm transition flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-[#2C4A3E]/10 text-[#2C4A3E] text-xs flex items-center justify-center font-bold">${String.fromCharCode(65 + idx)}</span>
+              <span>${opt}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function answerL4(idx) {
+      const cData = LEVEL4_CASES[l4CurrentCaseIndex];
+      if (idx === cData.answer) {
+        l4ScoreAcc += 20;
+        Swal.fire({ title: 'Analisis Bener!', text: '+20 Skor', icon: 'success', timer: 1000, showConfirmButton: false });
+      } else {
+        Swal.fire({ title: 'Kurang Trep!', text: 'Analisis durung pas.', icon: 'error', timer: 1200, showConfirmButton: false });
+      }
+
+      l4CurrentCaseIndex++;
+      if (l4CurrentCaseIndex < LEVEL4_CASES.length) {
+        setTimeout(renderL4Case, 1200);
+      } else {
+        finishLevel(4, l4ScoreAcc);
+      }
+    }
+
+    /* LEVEL 5 ENGINE */
+    let l5CurrentScenarioIndex = 0;
+    let l5ScoreAcc = 0;
+
+    function initLevel5() {
+      l5CurrentScenarioIndex = 0;
+      l5ScoreAcc = 0;
+      renderL5Scenario();
+    }
+
+    function selectL5Mission(missionIdx) {
+      document.querySelectorAll('.l5-mission-btn').forEach((btn, idx) => {
+        if (idx === missionIdx) {
+          btn.className = 'l5-mission-btn bg-[#FAEDCD] border-2 border-[#2C4A3E] p-3 rounded-xl text-xs font-bold text-[#2C4A3E] text-center';
+        } else {
+          btn.className = 'l5-mission-btn bg-gray-100 border border-gray-300 p-3 rounded-xl text-xs font-bold text-gray-600 text-center';
+        }
+      });
+      Swal.fire({
+        title: 'Misi Dipilih!',
+        text: 'Siapke dhiri kanggo ngadhepi 10 kahanan studi kasus simulasi.',
+        icon: 'info',
+        confirmButtonColor: '#2C4A3E'
+      });
+    }
+
+    function renderL5Scenario() {
+      const sData = LEVEL5_SCENARIOS[l5CurrentScenarioIndex];
+      document.getElementById('l5-case-progress').innerText = `Situasi ${l5CurrentScenarioIndex + 1} / 10`;
+
+      const box = document.getElementById('l5-scenario-box');
+      box.innerHTML = `
+        <p class="font-semibold text-gray-800 text-sm sm:text-base">${sData.q}</p>
+        <div class="space-y-2 mt-3">
+          ${sData.options.map((opt, idx) => `
+            <button onclick="answerL5(${idx})" class="w-full text-left p-3 rounded-xl border border-gray-200 hover:border-[#2C4A3E] hover:bg-[#FAEDCD]/40 text-xs sm:text-sm transition flex items-center space-x-2">
+              <span class="w-6 h-6 rounded-full bg-[#2C4A3E]/10 text-[#2C4A3E] text-xs flex items-center justify-center font-bold">${String.fromCharCode(65 + idx)}</span>
+              <span>${opt}</span>
+            </button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function answerL5(idx) {
+      const sData = LEVEL5_SCENARIOS[l5CurrentScenarioIndex];
+      if (idx === sData.answer) {
+        l5ScoreAcc += 10;
+        Swal.fire({ title: 'Keputusan Trep!', text: '+10 Skor', icon: 'success', timer: 1000, showConfirmButton: false });
+      } else {
+        Swal.fire({ title: 'Kurang Trep!', text: 'Keputusan durung ideal.', icon: 'error', timer: 1200, showConfirmButton: false });
+      }
+
+      l5CurrentScenarioIndex++;
+      if (l5CurrentScenarioIndex < LEVEL5_SCENARIOS.length) {
+        setTimeout(renderL5Scenario, 1200);
+      } else {
+        finishLevel(5, l5ScoreAcc);
+      }
+    }
+
+    /* LEVEL 6 FINAL EXAM ENGINE */
+    let examAnswers = {};
+
+    function startLevel6Exam() {
+      appState.currentExamIndex = 0;
+      examAnswers = {};
+      appState.examSecondsLeft = 1800; // 30 mins
+      startExamTimer();
+      renderExamQuestion();
+    }
+
+    function startExamTimer() {
+      if (appState.examTimerInterval) clearInterval(appState.examTimerInterval);
+
+      appState.examTimerInterval = setInterval(() => {
+        appState.examSecondsLeft--;
+        const mins = Math.floor(appState.examSecondsLeft / 60);
+        const secs = appState.examSecondsLeft % 60;
+        document.getElementById('exam-timer').innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        if (appState.examSecondsLeft <= 0) {
+          clearInterval(appState.examTimerInterval);
+          Swal.fire({
+            title: 'Wektu Entek!',
+            text: 'Wektu ujian 30 menit wis rampung. Asil bakal dikalkulasi otomatis.',
+            icon: 'warning',
+            confirmButtonColor: '#2C4A3E'
+          }).then(() => finishExam());
+        }
+      }, 1000);
+    }
+
+    function renderExamQuestion() {
+      const idx = appState.currentExamIndex;
+      const qData = FINAL_EXAM_QUESTIONS[idx];
+
+      document.getElementById('l6-exam-progress').innerText = `Soal ${idx + 1} / 30`;
+      document.getElementById('btn-exam-prev').disabled = idx === 0;
+
+      const nextBtn = document.getElementById('btn-exam-next');
+      if (idx === FINAL_EXAM_QUESTIONS.length - 1) {
+        nextBtn.innerHTML = 'KUMPULAKE <i class="fas fa-paper-plane ml-1"></i>';
+      } else {
+        nextBtn.innerHTML = 'Sabanjure <i class="fas fa-chevron-right ml-1"></i>';
+      }
+
+      const box = document.getElementById('l6-exam-box');
+      box.innerHTML = `
+        <div class="bg-[#FAF7F2] p-4 rounded-xl border border-amber-200">
+          <p class="font-semibold text-gray-800 text-sm sm:text-base">${idx + 1}. ${qData.q}</p>
+        </div>
+        <div class="space-y-2 mt-3">
+          ${qData.options.map((opt, optIdx) => `
+            <label class="flex items-center p-3 rounded-xl border border-gray-200 hover:bg-[#FAEDCD]/40 cursor-pointer text-xs sm:text-sm transition ${examAnswers[idx] === optIdx ? 'bg-[#FAEDCD] border-[#2C4A3E] font-bold' : ''}">
+              <input type="radio" name="exam-opt" value="${optIdx}" ${examAnswers[idx] === optIdx ? 'checked' : ''} onchange="recordExamAnswer(${idx}, ${optIdx})" class="mr-3 text-[#2C4A3E] focus:ring-[#2C4A3E]">
+              <span>${opt}</span>
+            </label>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function recordExamAnswer(qIdx, optIdx) {
+      examAnswers[qIdx] = optIdx;
+    }
+
+    function prevExamQuestion() {
+      if (appState.currentExamIndex > 0) {
+        appState.currentExamIndex--;
+        renderExamQuestion();
+      }
+    }
+
+    function nextExamQuestion() {
+      if (appState.currentExamIndex < FINAL_EXAM_QUESTIONS.length - 1) {
+        appState.currentExamIndex++;
+        renderExamQuestion();
+      } else {
+        // Submit Exam
+        Swal.fire({
+          title: 'Kumpulake Evaluasi?',
+          text: 'Priksa maneh kabeh jawaban sadurunge dikumpulake.',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'Ya, Kumpulake',
+          cancelButtonText: 'Batal',
+          confirmButtonColor: '#2C4A3E'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            finishExam();
+          }
+        });
+      }
+    }
+
+    function finishExam() {
+      if (appState.examTimerInterval) clearInterval(appState.examTimerInterval);
+
+      let correctCount = 0;
+      FINAL_EXAM_QUESTIONS.forEach((q, idx) => {
+        if (examAnswers[idx] === q.answer) {
+          correctCount++;
+        }
+      });
+
+      const examScore = Math.round((correctCount / FINAL_EXAM_QUESTIONS.length) * 100);
+      finishLevel(6, examScore);
+    }
+
+    /* FINISH LEVEL HELPER */
+    function finishLevel(levelId, score) {
+      appState.scores[`l${levelId}`] = score;
+      if (!appState.completedLevels.includes(levelId)) {
+        appState.completedLevels.push(levelId);
+      }
+
+      localStorage.setItem('pranatacara_scores', JSON.stringify(appState.scores));
+      localStorage.setItem('pranatacara_completed', JSON.stringify(appState.completedLevels));
+
+      updateNavScore();
+
+      if (levelId === 6) {
+        navigateTo('result');
+      } else {
+        Swal.fire({
+          title: `Level ${levelId} Paripurna!`,
+          text: `Panjenengan pikantuk skor ${score} ing Level ${levelId}.`,
+          icon: 'success',
+          confirmButtonText: 'Lanjut menyang Dashboard',
+          confirmButtonColor: '#2C4A3E'
+        }).then(() => navigateTo('dashboard'));
+      }
+    }
+
+    /* RENDER RESULT SCREEN */
+    function renderResultScreen() {
+      if (!appState.user) return;
+
+      document.getElementById('res-user-name').innerText = appState.user.nama;
+      document.getElementById('res-user-kelas').innerText = appState.user.kelas;
+      document.getElementById('res-user-presensi').innerText = appState.user.presensi;
+
+      // Calculate total score & percentage
+      const totalScore = Object.values(appState.scores).reduce((a, b) => a + b, 0);
+      const maxPossibleScore = 500; // L1:100 + L2:100 + L3:100 + L4:100 + L5:100 = 500 + L6:100
+      const percentage = Math.min(100, Math.round((totalScore / 600) * 100));
+
+      document.getElementById('res-total-score').innerText = totalScore;
+      document.getElementById('res-percentage').innerText = `${percentage}%`;
+
+      // Estimate correct vs wrong items across activities
+      const totalCorrect = Math.round((percentage / 100) * 50);
+      document.getElementById('res-correct-wrong').innerText = `${totalCorrect} / ${50 - totalCorrect}`;
+
+      // Grade Category: Sangat Baik [92-100], Baik [82-91], Cukup [75-81], Perlu Gladhen [<75]
+      const categoryBadge = document.getElementById('res-category-badge');
+      if (percentage >= 92) {
+        categoryBadge.className = 'mt-1 px-3 py-1 rounded-full text-xs font-extrabold bg-green-100 text-green-800';
+        categoryBadge.innerText = 'SANGAT BAIK';
+      } else if (percentage >= 82) {
+        categoryBadge.className = 'mt-1 px-3 py-1 rounded-full text-xs font-extrabold bg-blue-100 text-blue-800';
+        categoryBadge.innerText = 'BAIK';
+      } else if (percentage >= 75) {
+        categoryBadge.className = 'mt-1 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800';
+        categoryBadge.innerText = 'CUKUP';
+      } else {
+        categoryBadge.className = 'mt-1 px-3 py-1 rounded-full text-xs font-extrabold bg-red-100 text-red-800';
+        categoryBadge.innerText = 'PERLU GLADHEN';
+      }
+
+      // Populate saved GAS URL
+      if (appState.gasUrl) {
+        document.getElementById('gas-url-input').value = appState.gasUrl;
+      }
+
+      // Fire victory confetti
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    }
+
+    /* GOOGLE SHEETS API INTEGRATION */
+    async function sendDataToGoogleSheets() {
+      const urlInput = document.getElementById('gas-url-input').value.trim();
+
+      if (!urlInput) {
+        Swal.fire({
+          title: 'URL Apps Script Kosong',
+          text: 'Lebokake URL Web App Google Apps Script saka gurumu dhisik.',
+          icon: 'warning',
+          confirmButtonColor: '#2C4A3E'
+        });
+        return;
+      }
+
+      // Save GAS URL to localStorage
+      appState.gasUrl = urlInput;
+      localStorage.setItem('pranatacara_gas_url', urlInput);
+
+      const totalScore = Object.values(appState.scores).reduce((a, b) => a + b, 0);
+      const percentage = Math.min(100, Math.round((totalScore / 600) * 100));
+      const category = document.getElementById('res-category-badge').innerText;
+
+      // Refleksiku answers payload
+      const reflection = {
+        q1: document.getElementById('ref-q1').value,
+        q2: document.getElementById('ref-q2').value,
+        q3: document.getElementById('ref-q3').value,
+        q4: document.getElementById('ref-q4').value,
+        q5: document.getElementById('ref-q5').value.trim() || 'Ora ana'
+      };
+
+      const payload = {
+        timestamp: new Date().toLocaleString('id-ID'),
+        nama: appState.user.nama,
+        kelas: appState.user.kelas,
+        presensi: appState.user.presensi,
+        skor: totalScore,
+        persentase: `${percentage}%`,
+        kategori: category,
+        refleksi: reflection
+      };
+
+      Swal.fire({
+        title: 'Ngirim Data Nilai...',
+        text: 'Lagi ngirim menyang Google Sheets.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      try {
+        await fetch(urlInput, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        Swal.fire({
+          title: 'Matur Nuwun!',
+          text: 'Data asil nilai lan refleksi wis kasil dikirim menyang Google Sheets gurumu.',
+          icon: 'success',
+          confirmButtonColor: '#2C4A3E'
+        });
+      } catch (err) {
+        Swal.fire({
+          title: 'Gagal Ngirim Data',
+          text: 'Priksa maneh koneksi internet lan URL Google Apps Script.',
+          icon: 'error',
+          confirmButtonColor: '#2C4A3E'
+        });
+      }
+    }
+
+    /* MODALS & UTILITY FUNCTIONS */
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function confirmResetData() {
+      Swal.fire({
+        title: 'Reset Progress Pembelajaran?',
+        text: 'Kabeh data registrasi, skor, lan level sing wis dibukak bakal diresiki.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Reset Kabeh',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#dc2626'
+      }).then((res) => {
+        if (res.isConfirmed) {
+          localStorage.removeItem('pranatacara_user');
+          localStorage.removeItem('pranatacara_scores');
+          localStorage.removeItem('pranatacara_completed');
+          localStorage.removeItem('pranatacara_gas_url');
+
+          appState = {
+            user: null,
+            scores: { l1:0, l2:0, l3:0, l4:0, l5:0, l6:0 },
+            completedLevels: [],
+            gasUrl: '',
+            currentExamIndex: 0,
+            examTimerInterval: null,
+            examSecondsLeft: 1800
+          };
+
+          document.getElementById('main-navbar').classList.add('hidden');
+          navigateTo('cover');
+
+          Swal.fire({
+            title: 'Berhasil Reset!',
+            text: 'Aplikasi wis bali menyang kahanan awal.',
+            icon: 'info',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>
